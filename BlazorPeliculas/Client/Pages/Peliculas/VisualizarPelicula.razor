@@ -1,0 +1,10 @@
+﻿@page "/pelicula/{PeliculaId:int}"
+@page "/pelicula/{PeliculaId:int}/{NombrePelicula}"
+
+<h1>El Id de la pelicula @PeliculaId</h1>
+<h1>El Id de la pelicula @NombrePelicula</h1>
+
+@code {
+    [Parameter] public int PeliculaId { get; set; }
+    [Parameter] public string NombrePelicula { get; set; }
+}

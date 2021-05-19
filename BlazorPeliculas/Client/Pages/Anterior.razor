@@ -1,0 +1,47 @@
+﻿@page "/anterior"
+@inject IRepositorio _repositorio
+@using static BlazorPeliculas.Client.Shared.MainLayout;
+
+<p style="font-size: @appState.Padding">Hola, @UtilidadesString.EnMayuscular(nombre)</p>
+
+<button @onclick="@ManejarClick">Presionar</button>
+
+<ListadoPeliculasAnterior ListaPeliculas="Peliculas" />
+
+<div>
+    <h2>Crear nueva Pelicula</h2>
+
+    <CajaTexto placeholder="Nombre pelicula" disabled />
+
+    <CajaTexto @attributes="EjemplosTexboxParametros" />
+</div>
+
+<button @onclick="AgregarPelicula">Agregar</button>
+
+@code {
+    string nombre = "Giancarlo";
+    [CascadingParameter] protected AppState appState { get; set; }
+
+    private Dictionary<string, object> EjemplosTexboxParametros = new Dictionary<string, object>
+                          {
+                                  {"placeholder", "nuevo placeholder" },
+                                  {"disabled", "true" },
+                              };
+
+    private void ManejarClick()
+    {
+        Console.WriteLine("Me has hecho click");
+    }
+
+    private List<Pelicula> Peliculas;
+
+    protected override void OnInitialized()
+    {
+        Peliculas = _repositorio.ObtenerPeliculas();
+    }
+
+    void AgregarPelicula()
+    {
+        Peliculas.Add(new Pelicula { Titulo = "Nueva pelicula", Lanzamiento = DateTime.Now });
+    }
+}

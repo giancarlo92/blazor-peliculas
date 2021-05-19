@@ -1,0 +1,12 @@
+﻿@page "/generos/crear"
+
+<FormularioGenero OnValidSubmit="Crear" Genero="Genero" />
+
+@code {
+    private Genero Genero = new Genero();
+
+    void Crear()
+    {
+        Console.WriteLine($"genero {Genero.Nombre}");
+    }
+}

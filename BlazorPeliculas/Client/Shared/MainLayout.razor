@@ -1,0 +1,35 @@
+﻿@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+        </div>
+
+        <div class="content px-4">
+            <CascadingValue Value="Color" Name="Color">
+                <CascadingValue Value="Size" Name="Size">
+                    <CascadingValue Value="appState">
+                        @Body
+                    </CascadingValue>
+                </CascadingValue>
+            </CascadingValue>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string Color = "blue";
+    private string Size = "12px";
+
+    AppState appState = new AppState();
+    public class AppState
+    {
+        public string Padding { get; set; } = "12px";
+        public string Margin { get; set; } = "12px";
+    }
+}
