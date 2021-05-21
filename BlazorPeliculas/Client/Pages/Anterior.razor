@@ -1,5 +1,6 @@
 ﻿@page "/anterior"
 @inject IRepositorio _repositorio
+@inject IUnitOfWork _unitOfWork
 @using static BlazorPeliculas.Client.Shared.MainLayout;
 
 <p style="font-size: @appState.Padding">Hola, @UtilidadesString.EnMayuscular(nombre)</p>
@@ -43,5 +44,10 @@
     void AgregarPelicula()
     {
         Peliculas.Add(new Pelicula { Titulo = "Nueva pelicula", Lanzamiento = DateTime.Now });
+        foreach (var item in _unitOfWork.Prueba.ObtenerTexto())
+        {
+            Console.WriteLine(item);
+        }
+        
     }
 }

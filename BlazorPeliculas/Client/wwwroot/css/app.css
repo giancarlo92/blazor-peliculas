@@ -46,9 +46,26 @@ a, .btn-link {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
+
+
+.form-markdown {
+    display: flex;
+}
+
+.form-markdown textarea {
+    width: 500px;
+    height: 500px;
+    margin-right: 15px;
+}
+
+.form-markdown .markdown-container {
+    border: 1px dashed black;
+    width: 500px;
+    height: 500px;
+}

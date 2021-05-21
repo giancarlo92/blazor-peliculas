@@ -2,12 +2,15 @@
 @using BlazorPeliculas.Shared
 @inject HttpClient Http
 @inject ServiciosSingleton singleton
+@inject IConfiguration Configuration
 
 <h1>Weather forecast</h1>
 
 <p>This component demonstrates fetching data from the server.</p>
 
 <p>Singleton count: @singleton.Valor</p>
+
+@Configuration["h1FontSize"]
 
 @if (forecasts == null)
 {

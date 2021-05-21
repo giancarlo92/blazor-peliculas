@@ -48,6 +48,11 @@ namespace BlazorPeliculas.Server
 
             app.UseRouting();
 
+            app.UseCors(options =>
+            {
+                options.AllowAnyOrigin();
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();

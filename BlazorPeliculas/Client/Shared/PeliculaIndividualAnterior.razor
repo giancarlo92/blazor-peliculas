@@ -1,6 +1,6 @@
 ﻿<div>
     <p>Titulo: @((MarkupString)Pelicula.Titulo)</p>
-    <p>Lanzamiento: <b>@Pelicula.Lanzamiento.ToString("dd MMM yyyy")</b></p>
+    <p>Lanzamiento: <b>@Pelicula.Lanzamiento.Value.ToString("dd MMM yyyy")</b></p>
     @if (MostrarBotones)
     {
         <div>
