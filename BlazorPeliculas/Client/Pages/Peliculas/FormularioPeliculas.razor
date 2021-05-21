@@ -42,6 +42,22 @@
             <SelectorMultiple Seleccionados="Seleccionados" NoSeleccionados="NoSeleccionados" />
         </div>
     </div>
+    <div class="form-group">
+        <label>Actores:</label>
+        <div>
+            <SelectorMultipleTypeahead Context="persona"
+                SearchMethod="BuscarActores" 
+                ElementosSeleccionados="ActoresSeleccionados">
+                <MyListTemplate>
+                    @persona.Nombre
+                </MyListTemplate>
+                <MyResultTemplate>
+                    <img style="width: 50px" src="@persona.Foto"/>
+                    @persona.Nombre
+                </MyResultTemplate>
+            </SelectorMultipleTypeahead>
+        </div>
+    </div>
     <button class="btn btn-success" type="submit">Guardar cambios</button>
 </EditForm>
 
@@ -50,6 +66,8 @@
     [Parameter] public EventCallback OnValidSubmit { get; set; }
     [Parameter] public List<Genero> GenerosSeleccionados { get; set; } = new List<Genero>();
     [Parameter] public List<Genero> GenerosNoSeleccionados { get; set; } = new List<Genero>();
+    [Parameter] public List<Persona> ActoresSeleccionados { get; set; } = new List<Persona>();
+
     private List<SelectorMultipleModel> NoSeleccionados { get; set; } = new List<SelectorMultipleModel>();
     private List<SelectorMultipleModel> Seleccionados { get; set; } = new List<SelectorMultipleModel>();
     private string posterTemporal;
@@ -70,5 +88,14 @@
     {
         Pelicula.Poster = imagenBase64;
         imagenUrl = null;
+    }
+
+    private async Task<IEnumerable<Persona>> BuscarActores(string searchText)
+    {
+        return new List<Persona>
+        {
+            new Persona {Id = 1, Nombre = "Tom Holland",  Foto = "https://m.media-amazon.com/images/M/MV5BNzZiNTEyNTItYjNhMS00YjI2LWIwMWQtZmYwYTRlNjMyZTJjXkEyXkFqcGdeQXVyMTExNzQzMDE0._V1_UX214_CR0,0,214,317_AL_.jpg"},
+            new Persona {Id = 2, Nombre = "Tom Hanks",  Foto = "https://m.media-amazon.com/images/M/MV5BYzVkM2Y3MTMtNDNhZS00MThjLWI3MWMtMzQ5NTFkNzcwMTVkXkEyXkFqcGdeQWFybm8@._V1_UX477_CR0,0,477,268_AL_.jpg"}
+        };
     }
 }
