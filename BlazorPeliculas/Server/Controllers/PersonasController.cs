@@ -1,4 +1,5 @@
-﻿using BlazorPeliculas.Shared.Entidades;
+﻿using BlazorPeliculas.Server.Helpers;
+using BlazorPeliculas.Shared.Entidades;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -13,15 +14,22 @@ namespace BlazorPeliculas.Server.Controllers
     public class PersonasController : ControllerBase
     {
         private readonly ApplicationDbContext context;
-
-        public PersonasController(ApplicationDbContext context)
+        private readonly IAlmacenadorArchivos _almacenadorArchivos;
+        private readonly string contenedor = "personas";
+        public PersonasController(ApplicationDbContext context, IAlmacenadorArchivos almacenadorArchivos)
         {
             this.context = context;
+            this._almacenadorArchivos = almacenadorArchivos;
         }
 
         [HttpPost]
         public async Task<ActionResult<int>> Post(Persona persona)
         {
+            if (!string.IsNullOrWhiteSpace(persona.Foto))
+            {
+                var fotoPersona = Convert.FromBase64String(persona.Foto);
+                persona.Foto = await _almacenadorArchivos.GuardarArchivo(fotoPersona, ".jpg", contenedor);
+            }
             context.Add(persona);
             await context.SaveChangesAsync();
             return persona.Id;

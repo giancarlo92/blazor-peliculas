@@ -1,3 +1,4 @@
+using BlazorPeliculas.Server.Helpers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,10 @@ namespace BlazorPeliculas.Server
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
+            //services.AddScoped<IAlmacenadorArchivos, AlmacenadorArchivosAzureStorage>();
+            services.AddScoped<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
+            services.AddHttpContextAccessor();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -1,7 +1,9 @@
 ﻿@page "/anterior"
 @inject IRepositorio _repositorio
 @inject IUnitOfWork _unitOfWork
+@inject HttpClient Http
 @using static BlazorPeliculas.Client.Shared.MainLayout;
+@using System.Text.Json;
 
 <p style="font-size: @appState.Padding">Hola, @UtilidadesString.EnMayuscular(nombre)</p>
 
@@ -24,7 +26,7 @@
     [CascadingParameter] protected AppState appState { get; set; }
 
     private Dictionary<string, object> EjemplosTexboxParametros = new Dictionary<string, object>
-                          {
+                      {
                                   {"placeholder", "nuevo placeholder" },
                                   {"disabled", "true" },
                               };
@@ -36,9 +38,10 @@
 
     private List<Pelicula> Peliculas;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
         Peliculas = _repositorio.ObtenerPeliculas();
+        await LlamarOtraApi();
     }
 
     void AgregarPelicula()
@@ -48,6 +51,24 @@
         {
             Console.WriteLine(item);
         }
-        
+
+    }
+
+    private async Task LlamarOtraApi()
+    {
+        var requestMessage = new HttpRequestMessage()
+        {
+            Method = new HttpMethod("GET"),
+            RequestUri = new Uri("https://jsonplaceholder.typicode.com/comments?postId=1")
+        };
+        var response = await Http.SendAsync(requestMessage);
+        var responseStatusCode = response.StatusCode;
+
+        var responseBody = await response.Content.ReadAsStringAsync();
+        var responseJson = JsonSerializer.Deserialize<List<ResponseJson>>(responseBody);
+        foreach (var item in responseJson)
+        {
+            Console.WriteLine($"{item.postId}-{item.id}-{item.name}-{item.email}");
+        };
     }
 }
