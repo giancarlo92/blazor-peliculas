@@ -10,7 +10,8 @@
 
     private async Task Crear()
     {
-        var response = await repositorio.Post("api/personas", Genero);
+        var response = await repositorio.Post("api/generos", Genero);
+        Console.WriteLine(response);
         if (response.Error)
         {
             await mostrarMensajes.MostrarMensajeError(await response.GetBody());

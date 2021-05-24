@@ -1,9 +1,40 @@
 ﻿@page "/personas"
+@inject IRepositorio repositorio
 
 <div class="form-group">
     <a class="btn btn-info" href="personas/crear">Agregar persona</a>
 </div>
 
-@code {
+<ListadoGenerico Listado="Personas">
+    <HayRegistrosCompleto>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Nombre</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Personas)
+                {
+                    <tr>
+                        <td>
+                            <a class="btn btn-success">Editar</a>
+                            <button class="btn btn-danger">Eliminar</button>
+                        </td>
+                        <td>@item.Nombre</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </HayRegistrosCompleto>
+</ListadoGenerico>
 
+@code {
+    public List<Persona> Personas { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        var response = await repositorio.Get<List<Persona>>("api/personas");
+        Personas = response.Response;
+    }
 }

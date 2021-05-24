@@ -1,7 +1,7 @@
 ﻿using BlazorPeliculas.Server.Helpers;
 using BlazorPeliculas.Shared.Entidades;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +20,20 @@ namespace BlazorPeliculas.Server.Controllers
         {
             this.context = context;
             this._almacenadorArchivos = almacenadorArchivos;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<List<Persona>>> Get()
+        {
+            return await context.Persona.ToListAsync();
+        }
+
+        [HttpGet("buscar/{textoBusqueda}")]
+        public async Task<ActionResult<List<Persona>>> Get(string textoBusqueda)
+        {
+            if (string.IsNullOrWhiteSpace(textoBusqueda)) return new List<Persona>();
+            textoBusqueda = textoBusqueda.ToLower();
+            return await context.Persona.Where(x => x.Nombre.ToLower().Contains(textoBusqueda)).ToListAsync();
         }
 
         [HttpPost]

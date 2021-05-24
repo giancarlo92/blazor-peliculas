@@ -1,26 +1,41 @@
 ﻿@page "/peliculas/crear"
 @inject NavigationManager navigation
+@inject IRepositorio repositorio
+@inject IMostrarMensajes mostrarMensajes
 
-<FormularioPeliculas Pelicula="Pelicula" OnValidSubmit="Crear" GenerosNoSeleccionados="GenerosNoSeleccionados" />
+@if (MostrarFormulario)
+{
+    <FormularioPeliculas Pelicula="Pelicula" OnValidSubmit="Crear" GenerosNoSeleccionados="GenerosNoSeleccionados" />
+}
+else
+{
+    <text>Cargando...</text>
+}
 
 @code {
+    private bool MostrarFormulario { get; set; } = false;
     private Pelicula Pelicula = new Pelicula();
     private List<Genero> GenerosNoSeleccionados { get; set; } = new List<Genero>();
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        GenerosNoSeleccionados = new List<Genero>
-        {
-            new Genero {Id = 1, Nombre = "Comedia" },
-            new Genero {Id = 2, Nombre = "Drama" },
-            new Genero {Id = 3, Nombre = "Acción" },
-            new Genero {Id = 4, Nombre = "Sci-Fi" }
-        };
+        var response = await repositorio.Get<List<Genero>>("api/generos");
+        GenerosNoSeleccionados = response.Response;
+        MostrarFormulario = true;
     }
 
-    void Crear()
+    private async Task Crear()
     {
-        Console.WriteLine(navigation.Uri);
-        navigation.NavigateTo("pelicula");
+        var response = await repositorio.Post<Pelicula, int>("/api/peliculas", Pelicula);
+        if (response.Error)
+        {
+            var mensajeError = await response.GetBody();
+            await mostrarMensajes.MostrarMensajeError(mensajeError);
+        }
+        else
+        {
+            var PeliculaId = response.Response;
+            navigation.NavigateTo($"/pelicula/{PeliculaId}/{Pelicula.Titulo.Replace(" ", "-")}");
+        }
     }
 }

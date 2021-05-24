@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BlazorPeliculas.Shared.Entidades
 {
@@ -27,5 +28,7 @@ namespace BlazorPeliculas.Shared.Entidades
         {
             return base.GetHashCode();
         }
+        [NotMapped]
+        public string Personaje { get; set; }
     }
 }

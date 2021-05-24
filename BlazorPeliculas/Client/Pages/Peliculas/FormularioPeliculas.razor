@@ -1,4 +1,6 @@
-﻿<EditForm Model="Pelicula" OnValidSubmit="OnValidSubmit">
+﻿@inject IRepositorio repositorio
+
+<EditForm Model="Pelicula" OnValidSubmit="OnDataAnnotationValidated">
     <DataAnnotationsValidator />
     <div class="form-group">
         <label>Título:</label>
@@ -49,7 +51,7 @@
                 SearchMethod="BuscarActores" 
                 ElementosSeleccionados="ActoresSeleccionados">
                 <MyListTemplate>
-                    @persona.Nombre
+                    @persona.Nombre / <input type="text" placeholder="Personaje" @bind="persona.Personaje" />
                 </MyListTemplate>
                 <MyResultTemplate>
                     <img style="width: 50px" src="@persona.Foto"/>
@@ -92,10 +94,17 @@
 
     private async Task<IEnumerable<Persona>> BuscarActores(string searchText)
     {
-        return new List<Persona>
-        {
-            new Persona {Id = 1, Nombre = "Tom Holland",  Foto = "https://m.media-amazon.com/images/M/MV5BNzZiNTEyNTItYjNhMS00YjI2LWIwMWQtZmYwYTRlNjMyZTJjXkEyXkFqcGdeQXVyMTExNzQzMDE0._V1_UX214_CR0,0,214,317_AL_.jpg"},
-            new Persona {Id = 2, Nombre = "Tom Hanks",  Foto = "https://m.media-amazon.com/images/M/MV5BYzVkM2Y3MTMtNDNhZS00MThjLWI3MWMtMzQ5NTFkNzcwMTVkXkEyXkFqcGdeQWFybm8@._V1_UX477_CR0,0,477,268_AL_.jpg"}
-        };
+        var response = await repositorio.Get<List<Persona>>($"api/personas/buscar/{searchText}");
+        return response.Response;
+    }
+
+    private async Task OnDataAnnotationValidated()
+    {
+        Pelicula.GenerosPelicula = Seleccionados.Select(x => new GeneroPelicula { GeneroId = int.Parse(x.Llave) }).ToList();
+        Pelicula.PeliculasActores = ActoresSeleccionados.Select(x => new PeliculaActor { PersonaId = x.Id, Personaje = x.Personaje }).ToList();
+
+        if (!string.IsNullOrWhiteSpace(Pelicula.Poster)) posterTemporal = null;
+
+        await OnValidSubmit.InvokeAsync(null);
     }
 }

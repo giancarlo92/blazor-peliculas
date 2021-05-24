@@ -41,7 +41,7 @@
     protected override async Task OnInitializedAsync()
     {
         Peliculas = _repositorio.ObtenerPeliculas();
-        await LlamarOtraApi();
+        await LlamarOtraApi2();
     }
 
     void AgregarPelicula()
@@ -51,7 +51,6 @@
         {
             Console.WriteLine(item);
         }
-
     }
 
     private async Task LlamarOtraApi()
@@ -69,6 +68,16 @@
         foreach (var item in responseJson)
         {
             Console.WriteLine($"{item.postId}-{item.id}-{item.name}-{item.email}");
+        };
+    }
+
+    private async Task LlamarOtraApi2()
+    {
+        var response = await _repositorio.Get<List<ResponseJson>>("https://jsonplaceholder.typicode.com/comments?postId=1");
+        var responseJson = response.Response;
+        foreach (var item in responseJson)
+        {
+            Console.WriteLine($"{item.postId}-{item.id}-{item.name}-{item.email} F2");
         };
     }
 }
