@@ -1,24 +1,57 @@
 ﻿@page "/personas/editar/{PersonaId:int}"
+@inject IRepositorio repositorio
+@inject IMostrarMensajes mostrarMensajes
+@inject NavigationManager navigation
 
-<FormularioPersona Persona="Persona" OnValidSubmit="Editar" />
+@if (Persona == null)
+{
+    <text>Cargando...</text>
+}
+else
+{
+    <FormularioPersona Persona="Persona" OnValidSubmit="Editar" />
+}
+
+
 
 @code {
-    private Persona Persona = new Persona();
+    private Persona Persona;
     [Parameter] public int PersonaId { get; set; }
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        Persona = new Persona()
+        var response = await repositorio.Get<Persona>($"api/personas/{PersonaId}");
+
+        if (response.Error)
         {
-            Id = PersonaId,
-            Nombre = "Giancarlo",
-            FechaNacimiento = DateTime.Now
-        };
+            if (response.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigation.NavigateTo("personas");
+            }
+            else
+            {
+                await mostrarMensajes.MostrarMensajeError(await response.GetBody());
+            }
+        }
+        else
+        {
+            Persona = response.Response;
+        }
+
     }
 
-    private void Editar()
+    private async Task Editar()
     {
-        Console.WriteLine("editando persona");
+        var response = await repositorio.Put("api/personas", Persona);
+
+        if (response.Error)
+        {
+            await mostrarMensajes.MostrarMensajeError(await response.GetBody());
+        }
+        else
+        {
+            navigation.NavigateTo("personas");
+        }
     }
 }
 

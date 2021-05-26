@@ -32,6 +32,9 @@ namespace BlazorPeliculas.Server
             services.AddControllersWithViews().AddNewtonsoftJson(
                 options => options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore
             );
+
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddControllersWithViews();
             services.AddRazorPages();
         }
