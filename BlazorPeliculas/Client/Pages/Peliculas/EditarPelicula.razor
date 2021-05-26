@@ -1,31 +1,61 @@
 ﻿@page "/peliculas/editar/{PeliculaId:int}"
+@inject IRepositorio repositorio
+@inject NavigationManager navigation
+@inject IMostrarMensajes mostrarMensajes
 
-<FormularioPeliculas Pelicula="Pelicula" OnValidSubmit="Editar" GenerosNoSeleccionados="GenerosNoSeleccionados" GenerosSeleccionados="GenerosSeleccionados"  /> 
+@if (Pelicula == null)
+{
+    <text>Cargando...</text>
+}
+else
+{
+    <FormularioPeliculas Pelicula="Pelicula" OnValidSubmit="Editar" GenerosNoSeleccionados="GenerosNoSeleccionados" GenerosSeleccionados="GenerosSeleccionados" ActoresSeleccionados="ActoresSeleccionados" />
+}
+
 
 @code {
     [Parameter] public int PeliculaId { get; set; }
-    private Pelicula Pelicula = new Pelicula();
+    private Pelicula Pelicula;
     private List<Genero> GenerosSeleccionados { get; set; } = new List<Genero>();
     private List<Genero> GenerosNoSeleccionados { get; set; } = new List<Genero>();
+    private List<Persona> ActoresSeleccionados { get; set; } = new List<Persona>();
 
-    protected override void OnInitialized()
+    protected async override Task OnInitializedAsync()
     {
-        Pelicula = new Pelicula { Id = PeliculaId, Titulo = "Mi pelicula" };
-        GenerosSeleccionados = new List<Genero>
-        {
-            new Genero {Id = 4, Nombre = "Sci-Fi" }
-        };
+        var response = await repositorio.Get<PeliculaActualizacionDto>($"api/peliculas/actualizar/{PeliculaId}");
 
-        GenerosNoSeleccionados = new List<Genero>
+        if (response.Error)
         {
-            new Genero {Id = 1, Nombre = "Comedia" },
-            new Genero {Id = 2, Nombre = "Drama" },
-            new Genero {Id = 3, Nombre = "Acción" }
-        };
+            if (response.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                navigation.NavigateTo("peliculas");
+            }
+            else
+            {
+                await mostrarMensajes.MostrarMensajeError(await response.GetBody());
+            }
+        }
+        else
+        {
+            var model = response.Response;
+            ActoresSeleccionados = model.Actores;
+            Pelicula = model.Pelicula;
+            GenerosSeleccionados = model.GenerosSeleccionados;
+            GenerosNoSeleccionados = model.GenerosNoSeleccionados;
+        }
     }
 
-    void Editar()
+    private async Task Editar()
     {
-        Console.WriteLine("Editando pelicula");
+        var response = await repositorio.Put("api/peliculas", Pelicula);
+
+        if (response.Error)
+        {
+            await mostrarMensajes.MostrarMensajeError(await response.GetBody());
+        }
+        else
+        {
+            navigation.NavigateTo($"peliculas/{PeliculaId}");
+        }
     }
 }

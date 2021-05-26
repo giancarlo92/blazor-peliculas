@@ -1,5 +1,6 @@
 ﻿@page "/personas"
 @inject IRepositorio repositorio
+@inject IMostrarMensajes mostrarMensajes
 
 <div class="form-group">
     <a class="btn btn-info" href="personas/crear">Agregar persona</a>
@@ -20,7 +21,7 @@
                     <tr>
                         <td>
                             <a href="/personas/editar/@item.Id" class="btn btn-success">Editar</a>
-                            <button class="btn btn-danger">Eliminar</button>
+                            <button class="btn btn-danger" @onclick="(() => BorrarPersona(item))">Eliminar</button>
                         </td>
                         <td>@item.Nombre</td>
                     </tr>
@@ -32,9 +33,30 @@
 
 @code {
     public List<Persona> Personas { get; set; }
+
     protected override async Task OnInitializedAsync()
+    {
+        await Cargar();
+    }
+
+    private async Task Cargar()
     {
         var response = await repositorio.Get<List<Persona>>("api/personas");
         Personas = response.Response;
+    }
+
+
+    private async Task BorrarPersona(Persona persona)
+    {
+        var response = await repositorio.Delete($"api/personas/{persona.Id}");
+        if (response.Error)
+        {
+            await mostrarMensajes.MostrarMensajeError(await response.GetBody());
+        }
+        else
+        {
+            await Cargar();
+
+        }
     }
 }

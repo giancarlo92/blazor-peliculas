@@ -1,5 +1,5 @@
-﻿@page "/pelicula/{PeliculaId:int}"
-@page "/pelicula/{PeliculaId:int}/{NombrePelicula}"
+﻿@page "/peliculas/{PeliculaId:int}"
+@page "/peliculas/{PeliculaId:int}/{NombrePelicula}"
 @inject IRepositorio repositorio
 @inject NavigationManager navigation
 @inject IMostrarMensajes mostrarMensajes
@@ -46,7 +46,7 @@ else
             <div style="margin-bottom: 2px;">
                 <img style="width: 50px" src="@item.Foto" />
                 <span style="display: inline-block; width: 200px;">
-                    <a href="/persona/@item.Id/@item.Nombre.Replace(" ", "-")">@item.Nombre</a>
+                    <a href="/personas/@item.Id/@item.Nombre.Replace(" ", "-")">@item.Nombre</a>
                 </span>
                 <span style="display: inline-block;">...</span>
                 <span>@item.Personaje</span>

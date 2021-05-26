@@ -76,5 +76,15 @@ namespace BlazorPeliculas.Server.Controllers
             await context.SaveChangesAsync();
             return NoContent();
         }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Persona>> Delete(int id)
+        {
+            var existe = await context.Persona.AnyAsync(x => x.Id == id);
+            if (!existe) return NotFound();
+            context.Remove(new Persona { Id = id });
+            await context.SaveChangesAsync();
+            return NoContent();
+        }
     }
 }
