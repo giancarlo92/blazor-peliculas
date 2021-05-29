@@ -73,7 +73,7 @@
 
     private async Task LlamarOtraApi2()
     {
-        var response = await _repositorio.Get<List<ResponseJson>>("https://jsonplaceholder.typicode.com/comments?postId=1");
+        var response = await _repositorio.Get<List<ResponseJson>>($"{ unit2.UrlManager.GetUrlJsonPlaceholder}/comments?postId=1");
         var responseJson = response.Response;
         foreach (var item in responseJson)
         {
