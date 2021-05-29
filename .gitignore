@@ -446,3 +446,9 @@ $RECYCLE.BIN/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
+/BlazorPeliculas/Client/bin/*
+/BlazorPeliculas/Shared/obj/*
+/BlazorPeliculas/Shared/bin/*
+/BlazorPeliculas/Server/obj/*
+/BlazorPeliculas/Server/bin/*
+/BlazorPeliculas/Client/obj/*
