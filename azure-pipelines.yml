@@ -40,3 +40,4 @@ steps:
     modifyOutputPath: false
  
 - task: PublishBuildArtifacts@1
+  displayName: 'Publishing Build Artifacts...'
