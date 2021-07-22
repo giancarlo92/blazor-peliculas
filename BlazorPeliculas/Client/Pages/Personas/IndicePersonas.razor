@@ -1,6 +1,7 @@
 ﻿@page "/personas"
 @inject IRepositorio repositorio
 @inject IMostrarMensajes mostrarMensajes
+@attribute [Authorize(Roles = "admin")]
 
 <div class="form-group">
     <a class="btn btn-info" href="personas/crear">Agregar persona</a>

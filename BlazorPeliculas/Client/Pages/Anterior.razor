@@ -5,6 +5,15 @@
 @using static BlazorPeliculas.Client.Shared.MainLayout;
 @using System.Text.Json;
 
+<AuthorizeView Roles="admin">
+    <Authorized>
+        Estas autorizado @context.User.Identity.Name
+    </Authorized>
+    <NotAuthorized>
+        No estas autorizado
+    </NotAuthorized>
+</AuthorizeView>
+
 <p style="font-size: @appState.Padding">Hola, @UtilidadesString.EnMayuscular(nombre)</p>
 
 <button @onclick="@ManejarClick">Presionar</button>
