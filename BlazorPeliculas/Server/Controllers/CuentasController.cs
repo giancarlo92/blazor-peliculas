@@ -30,7 +30,7 @@ namespace BlazorPeliculas.Server.Controllers
             this.configuration = configuration;
         }
 
-        [HttpPost]
+        [HttpPost("Crear")]
         public async Task<ActionResult<UserToken>> CreateUser([FromBody] UserInfo model)
         {
             var user = new IdentityUser { UserName = model.Email, Email = model.Email };

@@ -17,8 +17,8 @@ namespace BlazorPeliculas.Client.Auth
     {
         private readonly IJSRuntime js;
         private readonly HttpClient httpClient;
-        private static readonly string TOKEN_KEY;
-        private readonly string EXPIRATION_TOKEN_KEY;
+        private static readonly string TOKEN_KEY = "TOKEN_KEY";
+        private readonly string EXPIRATION_TOKEN_KEY = "EXPIRATION_TOKEN_KEY";
 
         private AuthenticationState Anonimo => new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 

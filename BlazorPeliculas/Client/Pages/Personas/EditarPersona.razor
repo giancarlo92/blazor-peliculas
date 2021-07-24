@@ -1,4 +1,5 @@
 ﻿@page "/personas/editar/{PersonaId:int}"
+@page "/personas/{PersonaId:int}/{NombrePersona}"
 @inject IRepositorio repositorio
 @inject IMostrarMensajes mostrarMensajes
 @inject NavigationManager navigation
@@ -18,6 +19,7 @@ else
 @code {
     private Persona Persona;
     [Parameter] public int PersonaId { get; set; }
+    [Parameter] public string NombrePersona { get; set; }
 
     protected async override Task OnInitializedAsync()
     {

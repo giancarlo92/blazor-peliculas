@@ -1,0 +1,19 @@
+﻿@page "/Logout"
+@using BlazorPeliculas.Client.Auth
+
+@inject IRepositorio repositorio
+@inject NavigationManager navigation
+@inject ILoginService loginService
+@inject IMostrarMensajes mostrarMensajes
+
+<h3>Logout</h3>
+
+<text>Desconectando...</text>
+
+@code {
+    protected async override Task OnInitializedAsync()
+    {
+        await loginService.Logout();
+        navigation.NavigateTo("");
+    }
+}

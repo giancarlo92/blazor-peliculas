@@ -15,6 +15,7 @@ namespace BlazorPeliculas.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "Admin")]
     public class PeliculasController : ControllerBase
     {
         private readonly ApplicationDbContext context;
@@ -30,7 +31,7 @@ namespace BlazorPeliculas.Server.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [AllowAnonymous]
         public async Task<ActionResult<HomePageDto>> Get()
         {
             var limite = 6;
@@ -54,6 +55,7 @@ namespace BlazorPeliculas.Server.Controllers
         }
         
         [HttpGet("{id}")]
+        [AllowAnonymous]
         public async Task<ActionResult<PeliculaVisualizarDto>> Get(int id)
         {
             var pelicula = await context.Pelicula
@@ -107,6 +109,7 @@ namespace BlazorPeliculas.Server.Controllers
         }
 
         [HttpGet("filtrar")]
+        [AllowAnonymous]
         public async Task<ActionResult<List<Pelicula>>> Get([FromQuery] ParametrosBusquedaPeliculas parametrosBusqueda)
         {
             var peliculasQueryable = context.Pelicula.AsQueryable();
