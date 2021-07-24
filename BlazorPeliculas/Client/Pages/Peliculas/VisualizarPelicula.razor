@@ -23,9 +23,10 @@ else
         }
     }
 
-    <text>|</text> <span>@model.Pelicula.Lanzamiento.Value.ToString("dd MM yyyy")</span>
-    <text>| Promedio </text> @model.PromedioVotos.ToString("0.#")
-    <text>| Tu voto </text> @model.VotoUsuario.ToString("0.#")
+    <text> | </text> <span>@model.Pelicula.Lanzamiento.Value.ToString("dd MMM yyyy")</span>
+    <text> | Promedio: </text> @model.PromedioVotos.ToString("0.#")
+    <text>/5 | Tu voto: </text>
+    <Rating MaximoPuntaje="5" PuntajeSeleccionado="model.VotoUsuario" OnVote="OnVote" />
     <div style="display: flex;">
         <span style="display: inline-block; margin-right: 5px;">
             <img src="@model.Pelicula.Poster" style="width: 225px; height: 315px;" />
@@ -43,14 +44,14 @@ else
         <div style="display: flex; flex-direction: column">
             @foreach (var item in model.Actores)
             {
-            <div style="margin-bottom: 2px;">
-                <img style="width: 50px" src="@item.Foto" />
-                <span style="display: inline-block; width: 200px;">
-                    <a href="/personas/@item.Id/@item.Nombre.Replace(" ", "-")">@item.Nombre</a>
-                </span>
-                <span style="display: inline-block;">...</span>
-                <span>@item.Personaje</span>
-            </div>
+                <div style="margin-bottom: 2px;">
+                    <img style="width: 50px" src="@item.Foto" />
+                    <span style="display: inline-block; width: 200px;">
+                        <a href="/personas/@item.Id/@item.Nombre.Replace(" ", "-")">@item.Nombre</a>
+                    </span>
+                    <span style="display: inline-block;">...</span>
+                    <span>@item.Personaje</span>
+                </div>
             }
         </div>
     </div>
@@ -81,6 +82,21 @@ else
         else
         {
             model = response.Response;
+        }
+    }
+
+    private async Task OnVote(int votoSeleccionado)
+    {
+        model.VotoUsuario = votoSeleccionado;
+        var votoPelicula = new VotoPelicula { Voto = votoSeleccionado, PeliculaId = PeliculaId };
+        var response = await repositorio.Post("api/votos", votoPelicula);
+        if (response.Error)
+        {
+            await mostrarMensajes.MostrarMensajeError("Su voto no ha sido recibido");
+        }
+        else
+        {
+            await mostrarMensajes.MostrarMensajeExitoso("Su voto ha sido recibido");
         }
     }
 }

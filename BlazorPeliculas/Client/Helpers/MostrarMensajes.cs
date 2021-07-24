@@ -8,5 +8,10 @@ namespace BlazorPeliculas.Client.Helpers
         {
             await Task.FromResult(0);
         }
+
+        public async Task MostrarMensajeExitoso(string mensaje)
+        {
+            await Task.FromResult(0);
+        }
     }
 }

@@ -4,6 +4,7 @@ using BlazorPeliculas.Shared.Dtos;
 using BlazorPeliculas.Shared.Entidades;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -21,13 +22,15 @@ namespace BlazorPeliculas.Server.Controllers
         private readonly ApplicationDbContext context;
         private readonly IAlmacenadorArchivos almacenadorArchivos;
         private readonly IMapper mapper;
+        private readonly UserManager<IdentityUser> userManager;
         private readonly string contenedor = "peliculas";
 
-        public PeliculasController(ApplicationDbContext context, IAlmacenadorArchivos almacenadorArchivos, IMapper mapper)
+        public PeliculasController(ApplicationDbContext context, IAlmacenadorArchivos almacenadorArchivos, IMapper mapper, UserManager<IdentityUser> userManager)
         {
             this.context = context;
             this.almacenadorArchivos = almacenadorArchivos;
             this.mapper = mapper;
+            this.userManager = userManager;
         }
 
         [HttpGet]
@@ -66,8 +69,25 @@ namespace BlazorPeliculas.Server.Controllers
 
             if (pelicula == null) NotFound();
 
-            var promedioVotos = 4;
-            var votoUsuario = 5;
+            var promedioVotos = 0.0;
+            var votoUsuario = 0;
+
+            if(await context.VotoPelicula.AnyAsync(x => x.PeliculaId == id))
+            {
+                promedioVotos = await context.VotoPelicula.Where(x => x.PeliculaId == id).AverageAsync(x => x.Voto);
+
+                if (HttpContext.User.Identity.IsAuthenticated)
+                {
+                    var user = await userManager.FindByEmailAsync(HttpContext.User.Identity.Name);
+                    var userId = user.Id;
+                    var votoUsuarioDB = await context.VotoPelicula.FirstOrDefaultAsync(x => x.PeliculaId == id && x.UserId == userId);
+
+                    if (votoUsuarioDB != null)
+                    {
+                        votoUsuario = votoUsuarioDB.Voto;
+                    }
+                }
+            }
 
             pelicula.PeliculasActores = pelicula.PeliculasActores.OrderBy(x => x.Orden).ToList();
 

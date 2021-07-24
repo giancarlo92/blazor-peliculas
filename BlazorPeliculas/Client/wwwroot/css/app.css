@@ -225,3 +225,7 @@ a, .btn-link {
         opacity: 0;
     }
 }
+
+.checked {
+    color: orange;
+}
