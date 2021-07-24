@@ -3,7 +3,6 @@ using BlazorPeliculas.Client.Helpers;
 using BlazorPeliculas.Client.Repositories;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
@@ -34,7 +33,12 @@ namespace BlazorPeliculas.Client
             services.AddScoped<IMostrarMensajes, MostrarMensajes>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
             services.AddAuthorizationCore();
-            services.AddScoped<AuthenticationStateProvider, ProveedorAutenticacion>();
+
+            services.AddScoped<ProveedorAutenticacionJwt>();
+            services.AddScoped<AuthenticationStateProvider, ProveedorAutenticacionJwt>(
+                provider => provider.GetRequiredService<ProveedorAutenticacionJwt>());
+            services.AddScoped<ILoginService, ProveedorAutenticacionJwt>(
+               provider => provider.GetRequiredService<ProveedorAutenticacionJwt>());
         }
     }
 }

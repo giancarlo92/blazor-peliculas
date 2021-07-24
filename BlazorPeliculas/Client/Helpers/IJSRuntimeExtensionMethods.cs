@@ -10,5 +10,20 @@ namespace BlazorPeliculas.Client.Helpers
             await js.InvokeVoidAsync("console.log", "primer parametro");
             return await js.InvokeAsync<bool>("confirm", mensaje);
         }
+
+        public static async ValueTask<object> SetInLocalStorage(this IJSRuntime js, string key, string content)
+        {
+            return await js.InvokeAsync<object>("localStorage.setItem", key, content);
+        }
+
+        public static async ValueTask<string> GetFromLocalStorage(this IJSRuntime js, string key)
+        {
+            return await js.InvokeAsync<string>("localStorage.getItem", key);
+        }
+
+        public static async ValueTask<object> RemoveItem(this IJSRuntime js, string key)
+        {
+            return await js.InvokeAsync<object>("localStorage.removeItem", key);
+        }
     }
 }

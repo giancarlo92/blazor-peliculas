@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlazorPeliculas.Client.Auth
 {
-    public class ProveedorAutenticacion : AuthenticationStateProvider
+    public class ProveedorAutenticacionPrueba : AuthenticationStateProvider
     {
         public async override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
