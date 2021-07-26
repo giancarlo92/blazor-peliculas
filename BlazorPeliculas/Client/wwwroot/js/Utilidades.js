@@ -8,3 +8,5 @@
 function pruebaPuntoNetInstancia(dotnetHelper) {
     dotnetHelper.invokeMethodAsync("IncrementCount");
 }
+
+
