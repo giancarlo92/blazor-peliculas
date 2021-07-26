@@ -1,0 +1,31 @@
+﻿@page "/start-login/{email}/{password}"
+
+@using BlazorPeliculas.Client.Auth
+
+@inject IRepositorio repositorio
+@inject NavigationManager navigation
+@inject ILoginService loginService
+@inject IMostrarMensajes mostrarMensajes
+
+<h3>StartLogin</h3>
+
+@code {
+    [Parameter] public string email { get; set; }
+    [Parameter] public string password { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        var userInfo = new UserInfo { Email = email, Password = password };
+        var response = await repositorio.Post<UserInfo, UserToken>("api/cuentas/login", userInfo);
+
+        if (response.Error)
+        {
+            await mostrarMensajes.MostrarMensajeError(await response.GetBody());
+        }
+        else
+        {
+            await loginService.Login(response.Response);
+            navigation.NavigateTo("");
+        }
+    }
+}

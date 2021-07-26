@@ -1,4 +1,5 @@
 ﻿using BlazorPeliculas.Shared.Entidades;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -22,6 +23,9 @@ namespace BlazorPeliculas.Server
             //    personas.Add(new Persona { Id = i, Nombre = $"Persona {i}", FechaNacimiento = DateTime.Now });
             //}
             //modelBuilder.Entity<Persona>().HasData(personas);
+
+            var roleAdmin = new IdentityRole { Id = "0e72f52f-6fee-452f-9de2-223e25aa5e19", Name = "admin", NormalizedName = "admin" };
+            modelBuilder.Entity<IdentityRole>().HasData(roleAdmin);
 
             base.OnModelCreating(modelBuilder);
         }

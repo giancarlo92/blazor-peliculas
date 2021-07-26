@@ -12,6 +12,7 @@
         "commandName": "IISExpress",
         "launchBrowser": true,
         "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+        "launchUrl": "start-login/giancarlo92@gmail.com/g10nCARLO22$",
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development"
         }
