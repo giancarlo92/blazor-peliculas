@@ -1,4 +1,6 @@
 ﻿using BlazorPeliculas.Shared.Dtos;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -6,6 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -61,6 +64,21 @@ namespace BlazorPeliculas.Server.Controllers
             {
                 return BadRequest("El intento de Login a fallado");
             }
+        }
+
+        [HttpGet("RenovarToken")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<ActionResult<UserToken>> Renovar()
+        {
+            var userInfo = new UserInfo()
+            {
+                Email = HttpContext.User.Identity.Name
+            };
+
+            var usuario = await userManager.FindByEmailAsync(userInfo.Email);
+            var roles = await userManager.GetRolesAsync(usuario);
+
+            return BuildToken(userInfo, roles);
         }
 
         private ActionResult<UserToken> BuildToken(UserInfo model, IList<string> roles)
