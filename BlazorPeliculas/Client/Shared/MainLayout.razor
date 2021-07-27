@@ -1,5 +1,7 @@
 ﻿@inherits LayoutComponentBase
 @inject BlazorPeliculas.Client.Auth.RenovadorToken renovadorToken
+@inject IJSRuntime js
+@inject NavigationManager navigation
 
 <div class="page">
     <div class="sidebar">
@@ -35,8 +37,21 @@
         public string Margin { get; set; } = "12px";
     }
 
-    protected override void OnInitialized()
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    protected async override Task OnInitializedAsync()
     {
+        await js.InicializarTimerInactivo(DotNetObjectReference.Create(this));
         renovadorToken.Iniciar();
+    }
+
+    [JSInvokable]
+    public async Task Logout()
+    {
+        var authState = await AuthenticationState;
+        if (authState.User.Identity.IsAuthenticated)
+        {
+            navigation.NavigateTo("logout");
+        }
     }
 }
