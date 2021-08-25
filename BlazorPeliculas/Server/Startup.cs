@@ -1,5 +1,5 @@
 using BlazorPeliculas.Server.Helpers;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -7,9 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
-using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace BlazorPeliculas.Server
 {
@@ -18,6 +17,7 @@ namespace BlazorPeliculas.Server
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
         }
 
         public IConfiguration Configuration { get; }
@@ -32,24 +32,19 @@ namespace BlazorPeliculas.Server
             });
 
             //TABLAS PARA AUTENTICACION CON IDENTITY DE NET CORE
-            services.AddIdentity<IdentityUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<IdentityUser>(options =>
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+            })
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            //CONFIGURACION DE JWT
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuer = false,
-                        ValidateAudience = false,
-                        ValidateLifetime = true,
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(
-                            Encoding.UTF8.GetBytes(Configuration["jwt:key"])),
-                        ClockSkew = System.TimeSpan.Zero
-                    }
-                );
+            services.AddIdentityServer()
+                .AddApiAuthorization<IdentityUser, ApplicationDbContext>();
+                //.AddProfileService<IdentityProfileService>;
+
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
 
             //services.AddScoped<IAlmacenadorArchivos, AlmacenadorArchivosAzureStorage>();
             services.AddScoped<IAlmacenadorArchivos, AlmacenadorArchivosLocal>();
@@ -61,7 +56,6 @@ namespace BlazorPeliculas.Server
 
             services.AddAutoMapper(typeof(Startup));
 
-            services.AddControllersWithViews();
             services.AddRazorPages();
         }
 
@@ -93,6 +87,7 @@ namespace BlazorPeliculas.Server
 
             //PARA LA AUTENTICACION
             app.UseAuthentication();
+            app.UseIdentityServer();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

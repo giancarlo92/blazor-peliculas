@@ -2,21 +2,19 @@
 using BlazorPeliculas.Server.Helpers;
 using BlazorPeliculas.Shared.Dtos;
 using BlazorPeliculas.Shared.Entidades;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace BlazorPeliculas.Server.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public class PersonasController : ControllerBase
     {
         private readonly ApplicationDbContext context;

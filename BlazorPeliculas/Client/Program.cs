@@ -1,7 +1,5 @@
-using BlazorPeliculas.Client.Auth;
 using BlazorPeliculas.Client.Helpers;
 using BlazorPeliculas.Client.Repositories;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -32,15 +30,7 @@ namespace BlazorPeliculas.Client
             services.AddScoped<IRepositorio, Repositorio>();
             services.AddScoped<IMostrarMensajes, MostrarMensajes>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
-            services.AddAuthorizationCore();
-
-            services.AddScoped<ProveedorAutenticacionJwt>();
-            services.AddScoped<AuthenticationStateProvider, ProveedorAutenticacionJwt>(
-                provider => provider.GetRequiredService<ProveedorAutenticacionJwt>());
-            services.AddScoped<ILoginService, ProveedorAutenticacionJwt>(
-               provider => provider.GetRequiredService<ProveedorAutenticacionJwt>());
-
-            services.AddScoped<RenovadorToken>();
+            services.AddApiAuthorization();
         }
     }
 }

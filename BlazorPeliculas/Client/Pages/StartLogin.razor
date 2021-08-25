@@ -1,10 +1,7 @@
 ﻿@page "/start-login/{email}/{password}"
 
-@using BlazorPeliculas.Client.Auth
-
 @inject IRepositorio repositorio
 @inject NavigationManager navigation
-@inject ILoginService loginService
 @inject IMostrarMensajes mostrarMensajes
 
 <h3>StartLogin</h3>
@@ -24,8 +21,8 @@
         }
         else
         {
-            await loginService.Login(response.Response);
-            navigation.NavigateTo("");
+            //await loginService.Login(response.Response);
+            //navigation.NavigateTo("");
         }
     }
 }

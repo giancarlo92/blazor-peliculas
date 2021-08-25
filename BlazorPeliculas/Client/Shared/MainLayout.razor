@@ -1,5 +1,4 @@
 ﻿@inherits LayoutComponentBase
-@inject BlazorPeliculas.Client.Auth.RenovadorToken renovadorToken
 @inject IJSRuntime js
 @inject NavigationManager navigation
 
@@ -42,7 +41,7 @@
     protected async override Task OnInitializedAsync()
     {
         await js.InicializarTimerInactivo(DotNetObjectReference.Create(this));
-        renovadorToken.Iniciar();
+        //renovadorToken.Iniciar();
     }
 
     [JSInvokable]

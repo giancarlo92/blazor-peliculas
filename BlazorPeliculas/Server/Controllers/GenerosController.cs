@@ -1,17 +1,15 @@
 ﻿using BlazorPeliculas.Shared.Entidades;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace BlazorPeliculas.Server.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Roles = "admin")]
+    [Authorize(Roles = "admin")]
     public class GenerosController : ControllerBase
     {
         private readonly ApplicationDbContext context;
